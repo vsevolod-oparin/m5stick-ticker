@@ -15,7 +15,7 @@ Simple M5StickC project to show basic info for particular tickers. Tested on M5S
 - M5StickC 0.2.5
 - WiFi 1.2.6
 
-## Configs to change
+## Setup
 
 1. Make a copy of `ticker/secrets-fake.h` to `ticker/secrets.h` and update consts there.
 2. Update wifi settings (ssid/password).
