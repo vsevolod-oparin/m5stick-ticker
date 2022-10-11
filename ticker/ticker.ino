@@ -1,5 +1,7 @@
 #include <M5StickC.h>
 
+#define DISPLAY_MANAGER_DEBUG false 
+
 #include "constants.h"
 #include "display_manager.h"
 #include "network_fetcher.h"
@@ -16,7 +18,7 @@ TickerTracker trackers[TICKER_NUM];
 int           ticker_iterator = 0;
 
 
-DisplayManager display_manager;
+DisplayManager display_manager(DISPLAY_MANAGER_DEBUG);
 NetworkFetcher network_fetcher(&display_manager);
 
 void init_prices() {

@@ -21,7 +21,7 @@ struct NetworkFetcher {
   String      quote_url(char const* ticker, char const* api_token);
   
   PriceUpdate http_fetch(String const& ticker);
-  void        async_http_fetch(String const& ticker, AsyncHTTPSRequest& request);
+  void        async_http_fetch(String const& ticker, AsyncHTTPSRequest* request);
   void        request_callback(void* opt_param, AsyncHTTPSRequest* request, int readyState);
   
 };
@@ -70,18 +70,18 @@ PriceUpdate parse_payload(String const& ticker, String const& payload) {
   };
 }
 
-void NetworkFetcher::async_http_fetch(String const& ticker, AsyncHTTPSRequest& request) {
-  if (request.readyState() == readyStateUnsent || request.readyState() == readyStateDone) {
+void NetworkFetcher::async_http_fetch(String const& ticker, AsyncHTTPSRequest* request) {
+  if (request->readyState() == readyStateUnsent || request->readyState() == readyStateDone) {
     String quote_url_str = quote_url(ticker.c_str(), api_token);
-    bool requestOpenResult = request.open("GGET", quote_url_str.c_str());
-
+    bool requestOpenResult = request->open("GET", quote_url_str.c_str());
+    
     if (requestOpenResult) {
-      request.send();
+      request->send();
     } else {
-      display_manager->debug("Can't send bad request\n");
+      display_manager->debug("Can't send bad request\n"); 
     }
   } else {
-    display_manager->debug("Can't send request\n");
+    display_manager->debug("Can't send request\n"); 
   }
 }
 
@@ -118,7 +118,6 @@ PriceUpdate NetworkFetcher::http_fetch(String const& ticker) {
 void NetworkFetcher::request_callback(void* opt_param, AsyncHTTPSRequest* request, int readyState) {
   PriceUpdate* price_update_ptr = (PriceUpdate*)opt_param;
   HTTPClient http;
-
   if (readyState == readyStateDone) {
     int httpCode = request->responseHTTPcode();
     if (httpCode == HTTP_CODE_OK) {
